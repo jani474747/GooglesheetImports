@@ -9,9 +9,9 @@ export const TableData = ({TableExcelData}) => {
             <th>{TableExcelData.Mobile}</th>
             <th>{TableExcelData.Address}</th>
             <th>{TableExcelData.Country}</th>
-            {/* <th>{TableExcelData.Status}</th>
-            <th>{TableExcelData.error_log}</th> */}
-
+            <th>{TableExcelData.Status}</th>
+            <th>{TableExcelData.Error}</th>
+           
             
             
         </>

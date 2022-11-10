@@ -50,18 +50,25 @@ function SheetData() {
       const worksheetName = workbook.SheetNames[0];
       const worksheet=workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-      setExcelData(data);
       //console.log('Data-->',data[0].Name)
-
+      
       // const handleChanges=()=>{
-
+        
         
         for(let i=0;i<data.length;i++){
-          setError(data[i])
-          console.log(data[i])
-          // if(data[i].Name)
+          // setError(data[i])
+          // console.log(data[i])
+          if(!data[i].Name || !data[i].Email || !data[i].Mobile || !data[i].Address || !data[i].Country){
+
+            data[i].Status = 'Data Missing'
+            data[i].Error = 'Error occurs'
+          }else{
+            data[i].Status = 'Success'
+            data[i].Error = 'No Error'
+          }
           //return data[i]
         }
+        setExcelData(data);
       // }
 
     }
@@ -99,25 +106,32 @@ function SheetData() {
    
       <hr></hr>
 
-      <Grid className='viewer'>
+      <div className='viewer'>
         {excelData===null&&<>No file selected</>}
         {excelData!==null&&(
-          <Grid>
-            <table>
+          <div>
+            <table style = {{padding : '2% 5% 0% 10%'}}>
               <thead >
                 <tr>
                   {/* <th scope='col'>ID</th> */}
-                  <th scope='col'>Name</th>
+                  <th style={{paddingRight : '1%'}} scope='col'>Name</th>
                   <th scope='col'>Email</th>
                   <th scope='col'>Mobile</th>
                   <th scope='col'>Address</th>
                   <th scope='col'>Country</th>
                   <th scope='col'>Status</th>
-                  {/* <tr>{error[i].name}</tr> */}
                   <th scope = 'col'>Error</th>
                   {/* <th scope='col'>{status.map((item)=>{
                   })}</th> */}
-                          
+                   {/* { 
+                Name == '' && Email == '' && Mobile == '' && Address == '' && Country == ''  ? null :  
+
+                <th scope='col'>error</th>
+                   }           */}
+                {/* { 
+                row.pickup_date == null ? '' :  <TableCell component="th" scope="row">
+                  {row.courier_name}
+                </TableCell>} */}
                 </tr>
               </thead>
               <tbody>
@@ -125,9 +139,9 @@ function SheetData() {
                 />
               </tbody>
             </table>            
-          </Grid>
+          </div>
         )}       
-      </Grid>
+      </div>
       <ToastContainer />
 
     </Box>
