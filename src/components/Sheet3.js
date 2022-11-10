@@ -2,7 +2,8 @@ import {useState} from 'react'
 import {Data} from '../components/Data'
 import * as XLSX from 'xlsx'
 import { Box, Button, Grid, Typography } from '@mui/material';
-import TableData from './TableData'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function SheetData() {
@@ -18,7 +19,7 @@ function SheetData() {
   //const fileType=['application/vnd.ms-excel'];
   const handleFile = (e)=>{
     let selectedFile = e.target.files[0];
-    if(selectedFile){
+    // if(selectedFile){
      //alert('send me details',selectedFile)
      
       if(selectedFile){
@@ -31,14 +32,14 @@ function SheetData() {
         } 
        //alert('send me details')
       }
-      else{
+      // else{
         //setExcelFileError('Please select only excel file types');
-        setExcelFile(null);
-      }
-    }
-    else{
-      console.log('plz select your file');
-    }
+      
+      // }
+    // }
+    // else{
+    //   console.log('plz select your file');
+    // }
   }
 
 
@@ -66,6 +67,9 @@ function SheetData() {
     }
     else{
       setExcelData(null);
+      toast.error('File not Found !', {
+        position: toast.POSITION.TOP_CENTER
+    });
     }
 
 
@@ -82,7 +86,9 @@ function SheetData() {
           <Typography>Upload Excel file</Typography>
          
           <input type='file' className='form-control'
-          onChange={handleFile} required />                  
+          onChange={handleFile} 
+          // required
+           />                  
           {/* {excelFileError&&<div className='text-danger'
           style={{marginTop:5+'px'}}>{excelFileError}</div>} */}
           <Button type='submit' className='btn btn-success'
@@ -122,6 +128,7 @@ function SheetData() {
           </Grid>
         )}       
       </Grid>
+      <ToastContainer />
 
     </Box>
   );
