@@ -16,8 +16,8 @@ function SheetData() {
 
   let i = 0;
   let line = 'No Error';
-  const isAnonymous = false;
-
+  
+  const [disable,setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
   //const [currentPage, setCurrentPage] = useState(1);
   const [excelData, setExcelData] = useState(null);
@@ -36,9 +36,9 @@ function SheetData() {
 
   // ]
 
-  const handleClick = event => {
-    event.currentTarget.disabled = true;
-  };
+  
+    
+  
 
 
   const pagenation = paginationFactory({
@@ -75,6 +75,10 @@ function SheetData() {
     }
 
   }
+
+  const handleClick = () => {
+    setDisable(false);
+  };
 
 
   // const handleClick = event => {
@@ -127,7 +131,7 @@ function SheetData() {
         if (!data[i].Name) {
           data[i].Status = 'Inactive'
           line = line + " "+  '&' + " " + 'Name'
-          data[i].Error = { line }
+          data[i].Error = line
 
         }
         // for Mobile
@@ -169,7 +173,9 @@ function SheetData() {
 
       }
       setExcelData(data);
-      isAnonymous = true;
+      setDisable(true);
+
+      
 
     }
     else {
@@ -196,9 +202,12 @@ function SheetData() {
             onChange={handleFile} />
 
           <button 
-             disabled={isAnonymous ? true : ''}
+             disabled={disable}
+             onClick={handleClick}
              type='submit' className='btn btn-success'
-            style={{ marginTop: 5 + 'px', backgroundColor: 'skyblue', borderColor: 'skyblue' }}>Submit</button>
+            //style={{ marginTop: 5 + 'px', backgroundColor: 'skyblue', borderColor: 'skyblue' }}
+            style = {disable ? styles.buttonDisabled : styles.button}
+            >Submit</button>
         </form>
       </Grid>
 
@@ -237,5 +246,23 @@ function SheetData() {
     </Box>
   );
 }
+
+const styles = {
+  container: {
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    padding: '10px 30px',
+    cursor: 'pointer',
+  },
+  buttonDisabled: {
+    padding: '10px 30px',
+    cursor: 'not-allowed',
+  },
+};
 
 export default SheetData;
