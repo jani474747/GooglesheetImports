@@ -1,4 +1,5 @@
 import React from 'react'
+import line from './Sheet3'
 
 export const TableData = ({TableExcelData}) => {
     return (
@@ -10,7 +11,14 @@ export const TableData = ({TableExcelData}) => {
             <th>{TableExcelData.Address}</th>
             <th>{TableExcelData.Country}</th>
             <th>{TableExcelData.Status}</th>
-            <th>{TableExcelData.Error}</th>
+            <th>
+                {
+                <ul>
+                <li>{TableExcelData.Error}</li>
+                {/* <li>{TableExcelData.Error}</li> */}
+                </ul>
+                }
+                </th>
            
             
             

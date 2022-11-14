@@ -4,19 +4,61 @@ import * as XLSX from 'xlsx'
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
+
+
+
+let PageSize = 10;
+let array = [];
 
 function SheetData() {
 
-  
-const [errorMessage, setErrorMessage]=useState([]);
   let i = 0;
+  let line = 'No Error';
+  const isAnonymous = false;
 
   const [excelFile, setExcelFile] = useState(null);
-
-
-
+  //const [currentPage, setCurrentPage] = useState(1);
   const [excelData, setExcelData] = useState(null);
+  const [list, setList] = useState([])
+  const [double, setDouble] = useState(false);
+
+
+  // const colums = [
+
+  //   { name: 'Name', test: 'Name' },
+  //   { email: 'Email', test: 'Email' },
+  //   { mobile: 'Mobile', test: 'Mobile' },
+  //   { address: 'Address', test: 'Address' },
+  //   { company: 'Company', test: 'Company' }
+
+
+  // ]
+
+  const handleClick = event => {
+    event.currentTarget.disabled = true;
+  };
+
+
+  const pagenation = paginationFactory({
+    page: 1,
+    sizePerPage: 10,
+    firstPageText: '<<',
+    lastPageText: '>>',
+    prePageText: '<',
+    nextPageText: '>',
+    showTotal: true,
+    alwaysShowAllBtns: true,
+    onPageChange: function (page, sizePerPage) {
+      console.log('page', page)
+      console.log('sizePerPage', sizePerPage)
+    },
+    onSizePerPageChange: function (page, sizePerPage) {
+      console.log('page', page)
+      console.log('sizePerPage', sizePerPage)
+    }
+  });
 
 
   const handleFile = (e) => {
@@ -27,13 +69,25 @@ const [errorMessage, setErrorMessage]=useState([]);
       let reader = new FileReader();
       reader.readAsArrayBuffer(selectedFile);
       reader.onload = (e) => {
-
         setExcelFile(e.target.result);
       }
 
     }
 
   }
+
+
+  // const handleClick = event => {
+  //   event.setExcelData.disabled = true;
+  //   console.log('button clicked');
+  // };
+
+
+  // const currentTableData = useMemo(() => {
+  //   const firstPageIndex = (currentPage - 1) * PageSize;
+  //   const lastPageIndex = firstPageIndex + PageSize;
+  //   return data.slice(firstPageIndex, lastPageIndex);
+  // }, [currentPage]);
 
 
   const handleSubmit = (e) => {
@@ -43,13 +97,15 @@ const [errorMessage, setErrorMessage]=useState([]);
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-
+     
 
 
       for (let i = 0; i < data.length; i++) {
+        data[i].Status = 'Active'
+        data[i].Error = 'No Error'
 
         // if (!data[i].Name || !data[i].Email || !data[i].Mobile || !data[i].Address || !data[i].Country) {
-          
+
         //   console.log(data[i])
         //   data[i].Status = 'Data Missing' 
         //   data[i].Error = 'Error occurs'
@@ -58,44 +114,62 @@ const [errorMessage, setErrorMessage]=useState([]);
         //   data[i].Error = 'No Error'
         //   console.log("dataaaaaa->",data[i]);
         // }
+
+
+
+        // for Email
+        if (!data[i].Email) {
+          data[i].Status = 'Inactive'
+          line = 'Email ID'
+          data[i].Error = line
         
-        if(!data[i].Name){
-          //let Status = 
-          setErrorMessage(errorMessage => errorMessage + 'Name is missing')
-          data[i].Status = errorMessage;
-          //console.log('Data---->',errorMessage)
-         
-           
         }
-        
-        if(!data[i].Email){
-          //console.log("email", errorMessage)
-          setErrorMessage(errorMessage => errorMessage + "Email is missing")
-          data[i].Status = errorMessage;
-         
-        }
-        if(!data[i].Mobile){
-          setErrorMessage(errorMessage => errorMessage + "Mobile is missing")
-          data[i].Status = errorMessage;
-          
-        }
-        if(!data[i].Address){
-          setErrorMessage(errorMessage => errorMessage + "Address is missing")
-          data[i].Status = errorMessage;
-        
+        if (!data[i].Name) {
+          data[i].Status = 'Inactive'
+          line = line + " "+  '&' + " " + 'Name'
+          data[i].Error = { line }
 
         }
-        if(!data[i].Country){
-          setErrorMessage(errorMessage => errorMessage + "Counrty is missing")
-          data[i].Status = errorMessage;
-         
-
+        // for Mobile
+        if (!data[i].Mobile) {
+          data[i].Status = 'Inactive'
+          line = line + " "+  '&' + " " + 'Mobile is required'
+          data[i].Error = line
         }
-       
-    
+        // for Name   
+        
+
+        //console.log(array.join(" "))
+
+        // if(!data[i].Email){
+        //   //console.log("email", errorMessage)
+        //   setErrorMessage(errorMessage => errorMessage + "Email is missing")
+        //   data[i].Status = errorMessage;
+
+        // }
+        // if(!data[i].Mobile){
+        //   setErrorMessage(errorMessage => errorMessage + "Mobile is missing")
+        //   data[i].Status = errorMessage;
+
+        // }
+        // if(!data[i].Address){
+        //   setErrorMessage(errorMessage => errorMessage + "Address is missing")
+        //   data[i].Status = errorMessage;
+
+
+        // }
+        // if(!data[i].Country){
+        //   setErrorMessage(errorMessage => errorMessage + "Counrty is missing")
+        //   data[i].Status = errorMessage;
+
+
+        // }
+
+
 
       }
       setExcelData(data);
+      isAnonymous = true;
 
     }
     else {
@@ -121,8 +195,10 @@ const [errorMessage, setErrorMessage]=useState([]);
           <input type='file' className='form-control'
             onChange={handleFile} />
 
-          <Button type='submit' className='btn btn-success'
-            style={{ marginTop: 5 + 'px' }}>Submit</Button>
+          <button 
+             disabled={isAnonymous ? true : ''}
+             type='submit' className='btn btn-success'
+            style={{ marginTop: 5 + 'px', backgroundColor: 'skyblue', borderColor: 'skyblue' }}>Submit</button>
         </form>
       </Grid>
 
@@ -148,8 +224,9 @@ const [errorMessage, setErrorMessage]=useState([]);
                 </tr>
               </thead>
               <tbody>
-                <Data excelData={excelData}
-                />
+                <Data  pagenation = {pagenation} excelData={excelData} />
+
+
               </tbody>
             </table>
           </div>
