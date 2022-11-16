@@ -1,10 +1,10 @@
 import React,{useState} from 'react'
-import { TableData } from '../components/TableData'
+//import { TableData } from '../components/TableData'
 // import commentsData from './Sheet3'
 
 
 
-export const Data = ({ excelData }) => {
+export const Data = ({excelData}) => {
     //const [Search , setSearch] = useState('')
 
    return excelData.map((items,index) => (

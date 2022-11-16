@@ -1,17 +1,9 @@
-import { Data } from '../components/Data'
+//import { Data } from '../components/Data'
 import * as XLSX from 'xlsx'
-import { Box, Grid, listClasses, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useState, useMemo, useEffect } from 'react';
-import { TableHeader, Search } from "../components/pages";
-import { Stack, Pagination } from '@mui/material';
-import axios from 'axios';
-import { Table, Input } from "antd";
-import useTableSearch from './TableData'
-import { userColumns } from "./column";
-import { KeySharp } from '@mui/icons-material';
-// import excelData from './Data'
+import React, { useState } from 'react';
 
 
 
@@ -20,35 +12,27 @@ let search;
 
 function SheetData() {
   
-  const { Search } = Input;
+
   let i = 0;
   let line = 'No Error';
   const getInitialState = () => {
     const value = "20";
     return value;
   };
+  
 
-
-  const [totalItems, setTotalItems] = useState(0)
-  const [comments, setComments] = useState([]);
-  const [sorting, setSorting] = useState({ field: "", order: "" });
   const [disable, setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  // const [search, setSearch] = useState('')
-  const [index,setIndex] = useState('')
-  const [data, setData] = useState([])
+  const [currentPages, setCurrentPage] = useState(1);
   const [value, setValue] = useState(getInitialState);
-  //const [loading, setLoading] = useState(true);
-  const [recordsPerPage] = useState(10);
-  const [query,setQuery] = useState('')
-  const [searchVal, setSearchVal] = useState(null);
-
-  // const { filteredData, loading } = useTableSearch({
-  //   searchVal,
-  //   retrieve: excelData
-  // });
+  const [filtervalue,setFiltervalue] = useState('')
+  const [search, setSearch] = useState(null);
+  // const recordsPerPage = useState(10);
+  // const indexoflastRecord = currentPage * recordsPerPage;
+  // const indexoffirstRecord = indexoflastRecord - recordsPerPage;
+  // const currentRecords = data.slice(indexoffirstRecord,indexoflastRecord);
+  // const nPages = Math.ceil(data.length / recordsPerPage)
 
 
 
@@ -62,8 +46,10 @@ function SheetData() {
       reader.readAsArrayBuffer(selectedFile);
       reader.onload = (e) => {
         setExcelFile(e.target.result);
-      }
 
+        
+      }
+      
     }
 
   }
@@ -72,86 +58,6 @@ function SheetData() {
     setDisable(false);
   };
 
- 
-  // const excelData = {
-  //   nodes : list.filter((item)=>
-  //     item.name.toLowerCase().includes(search.toLowerCase())
-  //   )
-  // }
-
-
-
-
-  // const commentsData = useMemo(() => {
-  //   let excelData = comments;
-
-
-  //   if (Search) {
-  //     excelData = excelData.filter(
-  //         (comment) =>
-  //             comment.Name.toLowerCase().includes(Search.toLowerCase()) ||
-  //             comment.Email.toLowerCase().includes(Search.toLowerCase()) ||
-  //             comment.Mobile.toLowerCase().includes(Search.toLowerCase()) ||
-  //             comment.Address.toLowerCase().includes(Search.toLowerCase()) ||
-  //             comment.Country.toLowerCase().includes(Search.toLowerCase()) 
-  //     );
-  // }
-
-
-  //   if (sorting.TableExcelData) {
-  //     const reversed = sorting.order === 'asc' ? 1 : -1;
-  //     excelData = excelData.sort(
-  //       (a, b) => reversed * a[sorting.Name].localCompare(b[sorting.Country])
-  //     );
-  //   }
-
-
-
-
-  //   setTotalItems(excelData.length);
-
-
-  //   return excelData.slice(
-  //     (currentPage - 1) * PageSize,
-  //     (currentPage - 1) * PageSize + PageSize
-  //   );
-
-  // }, [comments, currentPage, sorting]);
-
-  //console.log(commentsData)
-
-//Pagenation
-
-// const indexOfLastRecord = currentPage * recordsPerPage;
-// const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-// const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-// const nPages = Math.ceil(data.length / recordsPerPage)
-// const url = ''
-
-// useEffect(() => {
-//   axios.get(url)
-//       .then(res => {
-//               setData(res.data);
-//               setLoading(false);
-//           })
-//           .catch(() => {
-//               console.log('There was an error while retrieving the data')
-//           })
-// }, [])
-
-
-var keys = ['Name','Email','Mobile','Address','Country']
-const search = (excelData) => {
-  return excelData.filter(
-    (item) =>
-    keys.some((key) => item[key].toLowerCase().includes(query) ||
-   item[key].toLowerCase().includes(query) ||
-   item[key].toLowerCase().includes(query) ||
-   item[key].toLowerCase().includes(query) ||
-   item[key].toLowerCase().includes(query))
-   );
-
-}
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -189,10 +95,9 @@ const search = (excelData) => {
 
       }
       setExcelData(data);
-      //console.log('data->',data)
+      setSearch(data);
       setDisable(true);
-
-
+     
 
     }
     else {
@@ -204,15 +109,33 @@ const search = (excelData) => {
 
   } 
 
- 
+const handleFilter = (e) =>{
+     if(e.target.value == ''){
+      setExcelData(search)
+     }else{
+        const filterResult = search.filter(items => 
+           items.Name.includes(e.target.value) ||
+           items.Email.includes(e.target.value) ||
+           items.Mobile.includes(e.target.value) ||
+           items.Address.toLowerCase().includes(e.target.value.toLowerCase()) ||
+           items.Country.toLowerCase().includes(e.target.value.toLowerCase())
+        
+        )
+        setExcelData(filterResult)
+     }
+     setFiltervalue(e.target.value)
+}
 
-  
+// const currentPage = () =>{
+//   if(currentPage !== nPage){
+//     setCurrentPage(currentPage + 1)
+//   }
+// }
 
- 
-
-  // const handleChange = (e) => {
-  //   setValue(e.target.value);
-  // };
+// const prevPage = () => {
+//   if(currentPage !== 1) 
+//       setCurrentPage(currentPage - 1)
+// }
 
   return (
 
@@ -228,7 +151,6 @@ const search = (excelData) => {
             disabled={disable}
             onClick={handleClick}
             type='submit' className='btn btn-success'
-            //style={{ marginTop: 5 + 'px', backgroundColor: 'skyblue', borderColor: 'skyblue' }}
             style={disable ? styles.buttonDisabled : styles.button}
           >Submit</button>
         </form>
@@ -244,10 +166,10 @@ const search = (excelData) => {
       </select>
        
       <input
-        placeholder="Search"
-        enterButton
-        style={{ top: "0", left: "0" }}
-        onChange={(e) => setQuery(e.target.value.toLowerCase())}
+        style={{ top: "0", left: "0" ,padding : '15px 35px',fontSize:'15px'}}
+        type = 'text'
+        value = {filtervalue}
+        onInput={(e)=>handleFilter(e)}
       />
 
         </div>
@@ -258,13 +180,6 @@ const search = (excelData) => {
             <table 
             className="table"
             style={{ padding: '2% 10% 10% 15%' }}>
-              {/* <TableHeader
-                // headers={headers}
-                excelData={excelData}
-                onSorting={(Name, order) =>
-                  setSorting({ Name, order })
-                } */}
-              {/* /> */}
               <thead style={{border: 'rgb(228, 247, 244)',backgroundColor : 'rgb(228, 247, 244)'}} className="table table-striped table-dark">
                 <tr>
                 
@@ -280,13 +195,28 @@ const search = (excelData) => {
                 </tr>
               </thead>
               <tbody>
-                <Data excelData={search(excelData)} />
-                {/* <Pagination
-                  total={totalItems}
-                  itemsPerPage={PageSize}
-                  currentPage={currentPage}
-                  onPageChange={(page) => setCurrentPage(page)}
-                /> */}
+               
+             {excelData.map((items,index) => (
+             <tr key = {index} style={{border : 'rgb(243, 212, 212)',backgroundColor : 'rgb(243, 212, 212)',width : '500px'}}>
+
+                    <td>{index+1}</td>
+                    <td>{items.Name}</td>
+                    <td>{items.Email}</td>
+                    <td>{items.Mobile}</td>
+                    <td>{items.Address}</td>
+                    <td>{items.Country}</td>
+                    <td>{items.Status}</td>
+                    <td>
+                     <ul>
+                        <li>{items.Error}</li>
+                     </ul>
+                     </td>
+                    </tr>       
+
+              ))}
+              
+
+              
               </tbody>
             </table>
           </div>
@@ -317,23 +247,3 @@ const styles = {
 };
 
 export default SheetData;
-
-
-
-
-
-
-
-
-
-
- // if (!data[i].Name || !data[i].Email || !data[i].Mobile || !data[i].Address || !data[i].Country) {
-
-        //   console.log(data[i])
-        //   data[i].Status = 'Data Missing' 
-        //   data[i].Error = 'Error occurs'
-        // } else {
-        //   data[i].Status = 'Success'
-        //   data[i].Error = 'No Error'
-        //   console.log("dataaaaaa->",data[i]);
-        // }
