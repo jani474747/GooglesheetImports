@@ -1,31 +1,33 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { TableData } from '../components/TableData'
+// import commentsData from './Sheet3'
 
 
-export const Data = ({excelData}) => {
- 
-   // const [currentPage , setCurrentPage] = useState(1)
 
+export const Data = ({ excelData }) => {
+    //const [Search , setSearch] = useState('')
 
-    return excelData.map((TableExcelData)=>(
-         <tr key={TableExcelData.Id}>
-            <TableData style = {{justifyContent : 'space-between'}} TableExcelData={TableExcelData}/>
+   return excelData.map((items,index) => (
+         <tr key = {index} style={{border : 'rgb(243, 212, 212)',backgroundColor : 'rgb(243, 212, 212)',width : '500px'}}>
+            {/* <TableData TableExcelData={TableExcelData}/> */}
+
+                    <td>{index+1}</td>
+                    <td>{items.Name}</td>
+                    <td>{items.Email}</td>
+                    <td>{items.Mobile}</td>
+                    <td>{items.Address}</td>
+                    <td>{items.Country}</td>
+                    <td>{items.Status}</td>
+                    <td>
+                     <ul>
+                        <li>{items.Error}</li>
+                     </ul>
+                     </td>
          </tr>       
 
-            //    <Stack spacing={2} >
-            //       <Pagination 
-            //         key={TableExcelData.Id}
-            //         count={10}
-            //         renderItem={(TableExcelData) => (
-            //           <TableData
-            //             style = {{justifyContent : 'space-between'}}
-            //             slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-            //             {...TableExcelData}
-            //           />
-            //         )}
-            //       />
-            //     </Stack>
-    ))
+   ))
 
 }
 
+
+// .filter(excelData =>excelData.Country.toLowerCase().include(Search.toLocaleLowerCase()))

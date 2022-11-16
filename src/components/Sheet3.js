@@ -1,64 +1,56 @@
-import { useState } from 'react'
 import { Data } from '../components/Data'
 import * as XLSX from 'xlsx'
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, listClasses, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import React, { useState, useMemo, useEffect } from 'react';
+import { TableHeader, Search } from "../components/pages";
+import { Stack, Pagination } from '@mui/material';
+import axios from 'axios';
+import { Table, Input } from "antd";
+import useTableSearch from './TableData'
+import { userColumns } from "./column";
+import { KeySharp } from '@mui/icons-material';
+// import excelData from './Data'
 
 
 
-
-let PageSize = 10;
-let array = [];
+const PageSize = 50;
+let search;
 
 function SheetData() {
-
+  
+  const { Search } = Input;
   let i = 0;
   let line = 'No Error';
-  
-  const [disable,setDisable] = useState()
+  const getInitialState = () => {
+    const value = "20";
+    return value;
+  };
+
+
+  const [totalItems, setTotalItems] = useState(0)
+  const [comments, setComments] = useState([]);
+  const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [disable, setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
-  //const [currentPage, setCurrentPage] = useState(1);
   const [excelData, setExcelData] = useState(null);
-  const [list, setList] = useState([])
-  const [double, setDouble] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  // const [search, setSearch] = useState('')
+  const [index,setIndex] = useState('')
+  const [data, setData] = useState([])
+  const [value, setValue] = useState(getInitialState);
+  //const [loading, setLoading] = useState(true);
+  const [recordsPerPage] = useState(10);
+  const [query,setQuery] = useState('')
+  const [searchVal, setSearchVal] = useState(null);
+
+  // const { filteredData, loading } = useTableSearch({
+  //   searchVal,
+  //   retrieve: excelData
+  // });
 
 
-  // const colums = [
-
-  //   { name: 'Name', test: 'Name' },
-  //   { email: 'Email', test: 'Email' },
-  //   { mobile: 'Mobile', test: 'Mobile' },
-  //   { address: 'Address', test: 'Address' },
-  //   { company: 'Company', test: 'Company' }
-
-
-  // ]
-
-  
-    
-  
-
-
-  const pagenation = paginationFactory({
-    page: 1,
-    sizePerPage: 10,
-    firstPageText: '<<',
-    lastPageText: '>>',
-    prePageText: '<',
-    nextPageText: '>',
-    showTotal: true,
-    alwaysShowAllBtns: true,
-    onPageChange: function (page, sizePerPage) {
-      console.log('page', page)
-      console.log('sizePerPage', sizePerPage)
-    },
-    onSizePerPageChange: function (page, sizePerPage) {
-      console.log('page', page)
-      console.log('sizePerPage', sizePerPage)
-    }
-  });
 
 
   const handleFile = (e) => {
@@ -80,19 +72,86 @@ function SheetData() {
     setDisable(false);
   };
 
+ 
+  // const excelData = {
+  //   nodes : list.filter((item)=>
+  //     item.name.toLowerCase().includes(search.toLowerCase())
+  //   )
+  // }
 
-  // const handleClick = event => {
-  //   event.setExcelData.disabled = true;
-  //   console.log('button clicked');
-  // };
 
 
-  // const currentTableData = useMemo(() => {
-  //   const firstPageIndex = (currentPage - 1) * PageSize;
-  //   const lastPageIndex = firstPageIndex + PageSize;
-  //   return data.slice(firstPageIndex, lastPageIndex);
-  // }, [currentPage]);
 
+  // const commentsData = useMemo(() => {
+  //   let excelData = comments;
+
+
+  //   if (Search) {
+  //     excelData = excelData.filter(
+  //         (comment) =>
+  //             comment.Name.toLowerCase().includes(Search.toLowerCase()) ||
+  //             comment.Email.toLowerCase().includes(Search.toLowerCase()) ||
+  //             comment.Mobile.toLowerCase().includes(Search.toLowerCase()) ||
+  //             comment.Address.toLowerCase().includes(Search.toLowerCase()) ||
+  //             comment.Country.toLowerCase().includes(Search.toLowerCase()) 
+  //     );
+  // }
+
+
+  //   if (sorting.TableExcelData) {
+  //     const reversed = sorting.order === 'asc' ? 1 : -1;
+  //     excelData = excelData.sort(
+  //       (a, b) => reversed * a[sorting.Name].localCompare(b[sorting.Country])
+  //     );
+  //   }
+
+
+
+
+  //   setTotalItems(excelData.length);
+
+
+  //   return excelData.slice(
+  //     (currentPage - 1) * PageSize,
+  //     (currentPage - 1) * PageSize + PageSize
+  //   );
+
+  // }, [comments, currentPage, sorting]);
+
+  //console.log(commentsData)
+
+//Pagenation
+
+// const indexOfLastRecord = currentPage * recordsPerPage;
+// const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+// const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+// const nPages = Math.ceil(data.length / recordsPerPage)
+// const url = ''
+
+// useEffect(() => {
+//   axios.get(url)
+//       .then(res => {
+//               setData(res.data);
+//               setLoading(false);
+//           })
+//           .catch(() => {
+//               console.log('There was an error while retrieving the data')
+//           })
+// }, [])
+
+
+var keys = ['Name','Email','Mobile','Address','Country']
+const search = (excelData) => {
+  return excelData.filter(
+    (item) =>
+    keys.some((key) => item[key].toLowerCase().includes(query) ||
+   item[key].toLowerCase().includes(query) ||
+   item[key].toLowerCase().includes(query) ||
+   item[key].toLowerCase().includes(query) ||
+   item[key].toLowerCase().includes(query))
+   );
+
+}
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -101,81 +160,39 @@ function SheetData() {
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-     
 
-
+    
       for (let i = 0; i < data.length; i++) {
         data[i].Status = 'Active'
         data[i].Error = 'No Error'
 
-        // if (!data[i].Name || !data[i].Email || !data[i].Mobile || !data[i].Address || !data[i].Country) {
-
-        //   console.log(data[i])
-        //   data[i].Status = 'Data Missing' 
-        //   data[i].Error = 'Error occurs'
-        // } else {
-        //   data[i].Status = 'Success'
-        //   data[i].Error = 'No Error'
-        //   console.log("dataaaaaa->",data[i]);
-        // }
-
-
-
         // for Email
         if (!data[i].Email) {
           data[i].Status = 'Inactive'
-          line = 'Email ID'
+          line = 'Required Email ID'
           data[i].Error = line
-        
+
         }
+        // for Name   
         if (!data[i].Name) {
           data[i].Status = 'Inactive'
-          line = line + " "+  '&' + " " + 'Name'
+          line = line + " " + '&' + " " + 'Name'
           data[i].Error = line
 
         }
         // for Mobile
         if (!data[i].Mobile) {
           data[i].Status = 'Inactive'
-          line = line + " "+  '&' + " " + 'Mobile is required'
+          line = line + " " + '&' + " " + 'Mobile'
           data[i].Error = line
-        }
-        // for Name   
-        
-
-        //console.log(array.join(" "))
-
-        // if(!data[i].Email){
-        //   //console.log("email", errorMessage)
-        //   setErrorMessage(errorMessage => errorMessage + "Email is missing")
-        //   data[i].Status = errorMessage;
-
-        // }
-        // if(!data[i].Mobile){
-        //   setErrorMessage(errorMessage => errorMessage + "Mobile is missing")
-        //   data[i].Status = errorMessage;
-
-        // }
-        // if(!data[i].Address){
-        //   setErrorMessage(errorMessage => errorMessage + "Address is missing")
-        //   data[i].Status = errorMessage;
-
-
-        // }
-        // if(!data[i].Country){
-        //   setErrorMessage(errorMessage => errorMessage + "Counrty is missing")
-        //   data[i].Status = errorMessage;
-
-
-        // }
-
-
+        }     
 
       }
       setExcelData(data);
+      //console.log('data->',data)
       setDisable(true);
 
-      
+
 
     }
     else {
@@ -185,57 +202,91 @@ function SheetData() {
       });
     }
 
+  } 
 
+ 
 
+  
 
-  }
+ 
+
+  // const handleChange = (e) => {
+  //   setValue(e.target.value);
+  // };
 
   return (
 
-    <Box>
+    <div>
 
-      <Grid >
+      <div >
         <form onSubmit={handleSubmit}>
           <Typography>Upload Excel file</Typography>
 
           <input type='file' className='form-control'
             onChange={handleFile} />
-
-          <button 
-             disabled={disable}
-             onClick={handleClick}
-             type='submit' className='btn btn-success'
+          <button
+            disabled={disable}
+            onClick={handleClick}
+            type='submit' className='btn btn-success'
             //style={{ marginTop: 5 + 'px', backgroundColor: 'skyblue', borderColor: 'skyblue' }}
-            style = {disable ? styles.buttonDisabled : styles.button}
-            >Submit</button>
+            style={disable ? styles.buttonDisabled : styles.button}
+          >Submit</button>
         </form>
-      </Grid>
+      </div>
 
 
       <hr></hr>
+      <div style={{justifyContent:'space-between'}}>
+      <select style={{ padding:'15px'}} value={value}>
+        <option value="10">10</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+       
+      <input
+        placeholder="Search"
+        enterButton
+        style={{ top: "0", left: "0" }}
+        onChange={(e) => setQuery(e.target.value.toLowerCase())}
+      />
 
-      <div className='viewer'>
+        </div>
+      <div className="openbtn text-center">
         {excelData === null && <>No file selected</>}
         {excelData !== null && (
           <div>
-            <table style={{ padding: '2% 5% 0% 10%' }}>
-              <thead >
+            <table 
+            className="table"
+            style={{ padding: '2% 10% 10% 15%' }}>
+              {/* <TableHeader
+                // headers={headers}
+                excelData={excelData}
+                onSorting={(Name, order) =>
+                  setSorting({ Name, order })
+                } */}
+              {/* /> */}
+              <thead style={{border: 'rgb(228, 247, 244)',backgroundColor : 'rgb(228, 247, 244)'}} className="table table-striped table-dark">
                 <tr>
-
-                  <th style={{ paddingRight: '1%' }} scope='col'>Name</th>
-                  <th scope='col'>Email</th>
-                  <th scope='col'>Mobile</th>
-                  <th scope='col'>Address</th>
-                  <th scope='col'>Country</th>
-                  <th scope='col'>Status</th>
-                  <th scope='col'>Error</th>
-
+                
+                  <th scope="row">ID</th>
+                  <th scope="row">Name</th>
+                  <th scope="row">Email</th>
+                  <th scope="row">Mobile</th>
+                  <th scope="row">Address</th>
+                  <th scope="row">Country</th>
+                  <th scope="row">Status</th>
+                  <th scope="row">Error</th>
+                 
                 </tr>
               </thead>
               <tbody>
-                <Data  pagenation = {pagenation} excelData={excelData} />
-
-
+                <Data excelData={search(excelData)} />
+                {/* <Pagination
+                  total={totalItems}
+                  itemsPerPage={PageSize}
+                  currentPage={currentPage}
+                  onPageChange={(page) => setCurrentPage(page)}
+                /> */}
               </tbody>
             </table>
           </div>
@@ -243,7 +294,7 @@ function SheetData() {
       </div>
       <ToastContainer />
 
-    </Box>
+    </div>
   );
 }
 
@@ -266,3 +317,23 @@ const styles = {
 };
 
 export default SheetData;
+
+
+
+
+
+
+
+
+
+
+ // if (!data[i].Name || !data[i].Email || !data[i].Mobile || !data[i].Address || !data[i].Country) {
+
+        //   console.log(data[i])
+        //   data[i].Status = 'Data Missing' 
+        //   data[i].Error = 'Error occurs'
+        // } else {
+        //   data[i].Status = 'Success'
+        //   data[i].Error = 'No Error'
+        //   console.log("dataaaaaa->",data[i]);
+        // }

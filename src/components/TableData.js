@@ -1,29 +1,52 @@
-import React from 'react'
-import line from './Sheet3'
+import { useState, useEffect } from "react";
 
-export const TableData = ({TableExcelData}) => {
-    return (
-        <>
-            {/* <th>{TableExcelData.Id}</th> */}
-            <th>{TableExcelData.Name}</th>
-            <th>{TableExcelData.Email}</th>
-            <th>{TableExcelData.Mobile}</th>
-            <th>{TableExcelData.Address}</th>
-            <th>{TableExcelData.Country}</th>
-            <th>{TableExcelData.Status}</th>
-            <th>
-                {
-                <ul>
-                <li>{TableExcelData.Error}</li>
-                {/* <li>{TableExcelData.Error}</li> */}
-                </ul>
-                }
-                </th>
-           
-            
-            
-        </>
-    )
-}
+ const useTableSearch = ({ searchVal, retrieve }) => {
+  const [filteredData, setFilteredData] = useState([]);
+  const [origData, setOrigData] = useState([]);
+  const [searchIndex, setSearchIndex] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-// export default TableData
+  useEffect(() => {
+    setLoading(true);
+    const crawl = (user, allValues) => {
+      if (!allValues) allValues = [];
+      for (var key in user) {
+        if (typeof user[key] === "object") crawl(user[key], allValues);
+        else allValues.push(user[key] + " ");
+      }
+      return allValues;
+    };
+    const fetchData = async () => {
+      const { excelData: users } = await retrieve();
+      setOrigData(users);
+      setFilteredData(users);
+      const searchInd = users.map(user => {
+        const allValues = crawl(user);
+        return { allValues: allValues.toString() };
+      });
+      setSearchIndex(searchInd);
+      if (users) setLoading(false);
+    };
+    fetchData();
+  }, [retrieve]);
+
+  useEffect(() => {
+    if (searchVal) {
+      const reqData = searchIndex.map((user, index) => {
+        if (user.allValues.toLowerCase().indexOf(searchVal.toLowerCase()) >= 0)
+          return origData[index];
+        return null;
+      });
+      setFilteredData(
+        reqData.filter(user => {
+          if (user) return true;
+          return false;
+        })
+      );
+    } else setFilteredData(origData);
+  }, [searchVal, origData, searchIndex]);
+
+  return { filteredData, loading };
+};
+
+export default useTableSearch;

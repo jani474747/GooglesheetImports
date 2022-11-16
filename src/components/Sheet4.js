@@ -18,7 +18,7 @@ function App() {
     let selectedFile = e.target.files[0];
     if(selectedFile){
       // console.log(selectedFile.type);
-      if(selectedFile&&fileType.includes(selectedFile.type)){
+      // if(selectedFile&&fileType.includes(selectedFile.type)){
         let reader = new FileReader();
         reader.readAsArrayBuffer(selectedFile);
         reader.onload=(e)=>{
@@ -30,10 +30,10 @@ function App() {
         setExcelFileError('Please select only excel file types');
         setExcelFile(null);
       }
-    }
-    else{
-      console.log('plz select your file');
-    }
+    //}
+    // else{
+    //   console.log('plz select your file');
+    // }
   }
 
   // submit function
