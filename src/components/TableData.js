@@ -1,52 +1,51 @@
-import { useState, useEffect } from "react";
+import React from 'react'
 
- const useTableSearch = ({ searchVal, retrieve }) => {
-  const [filteredData, setFilteredData] = useState([]);
-  const [origData, setOrigData] = useState([]);
-  const [searchIndex, setSearchIndex] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 
-  useEffect(() => {
-    setLoading(true);
-    const crawl = (user, allValues) => {
-      if (!allValues) allValues = [];
-      for (var key in user) {
-        if (typeof user[key] === "object") crawl(user[key], allValues);
-        else allValues.push(user[key] + " ");
-      }
-      return allValues;
-    };
-    const fetchData = async () => {
-      const { excelData: users } = await retrieve();
-      setOrigData(users);
-      setFilteredData(users);
-      const searchInd = users.map(user => {
-        const allValues = crawl(user);
-        return { allValues: allValues.toString() };
-      });
-      setSearchIndex(searchInd);
-      if (users) setLoading(false);
-    };
-    fetchData();
-  }, [retrieve]);
+    const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
-  useEffect(() => {
-    if (searchVal) {
-      const reqData = searchIndex.map((user, index) => {
-        if (user.allValues.toLowerCase().indexOf(searchVal.toLowerCase()) >= 0)
-          return origData[index];
-        return null;
-      });
-      setFilteredData(
-        reqData.filter(user => {
-          if (user) return true;
-          return false;
-        })
-      );
-    } else setFilteredData(origData);
-  }, [searchVal, origData, searchIndex]);
+    
 
-  return { filteredData, loading };
-};
+    const nextPage = () => {
+            if(currentPage !== nPages) setCurrentPage(currentPage + 1)
+    }
+    const prevPage = () => {
+        if(currentPage !== 1) setCurrentPage(currentPage - 1)
+    }
+    return (
+        <nav>
+            <ul className='pagination justify-content-center'>
+                <li className="page-item">
+                    <a className="page-link" 
+                        onClick={prevPage} 
+                        href='#'>
+                        
+                        Previous
+                    </a>
+                </li>
+                {pageNumbers.map(pgNumber => (
+                    <li key={pgNumber} 
+                        className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
-export default useTableSearch;
+                        <a onClick={() => setCurrentPage(pgNumber)}  
+                            className='page-link' 
+                            href='#'>
+                            
+                            {pgNumber}
+                        </a>
+                    </li>
+                ))}
+                <li className="page-item">
+                    <a className="page-link" 
+                        onClick={nextPage}
+                        href='#'>
+                        
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    )
+}
+
+export default Pagination

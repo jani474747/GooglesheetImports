@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+require('react-bootstrap-table-next/dist/react-bootstrap-table2.min.css');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
