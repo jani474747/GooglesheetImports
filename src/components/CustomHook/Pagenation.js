@@ -1,11 +1,10 @@
 import React from 'react';
-import { ClassNames } from '@emotion/react';
-import {usePagination , DOTS} from '../components/UsePagination'
+import classnames from 'classnames';
+import { usePagination, DOTS } from './usePagination';
 
-const Pagination = (props) => {
 
-// const Pagination = props => {
-  const{
+const Pagination = props => {
+  const {
     onPageChange,
     totalCount,
     siblingCount = 1,
@@ -34,15 +33,12 @@ const Pagination = (props) => {
   };
 
   let lastPage = paginationRange[paginationRange.length - 1];
-
   return (
-
-<ul
-      className={ClassNames('pagination-container', { [className]: className })}
+    <ul
+      className={classnames('pagination-container', { [className]: className })}
     >
-      
       <li
-        className={ClassNames('pagination-item', {
+        className={classnames('pagination-item', {
           disabled: currentPage === 1
         })}
         onClick={onPrevious}
@@ -50,16 +46,13 @@ const Pagination = (props) => {
         <div className="arrow left" />
       </li>
       {paginationRange.map(pageNumber => {
-         
-      
         if (pageNumber === DOTS) {
           return <li className="pagination-item dots">&#8230;</li>;
         }
-		
-      
+
         return (
           <li
-            className={ClassNames('pagination-item', {
+            className={classnames('pagination-item', {
               selected: pageNumber === currentPage
             })}
             onClick={() => onPageChange(pageNumber)}
@@ -68,9 +61,8 @@ const Pagination = (props) => {
           </li>
         );
       })}
-      
       <li
-        className={ClassNames('pagination-item', {
+        className={classnames('pagination-item', {
           disabled: currentPage === lastPage
         })}
         onClick={onNext}
@@ -78,8 +70,7 @@ const Pagination = (props) => {
         <div className="arrow right" />
       </li>
     </ul>
+  );
+};
 
-  )
-}
-
-export default Pagination
+export default Pagination;

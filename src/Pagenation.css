@@ -1,0 +1,77 @@
+.App {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100vw;
+  }
+/*   
+  .user {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: #b3e3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 500px;
+    height: 300px;
+    margin: 20px;
+  }
+   */
+  .paginationBttns {
+    /* width: 80%; */
+    height: 60px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    margin: auto;
+  }
+  
+  .paginationBttns a {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 5px;
+    border: 1px solid rgb(201, 192, 197);
+    /* color: white; */
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+  }
+  
+  
+  .paginationBttns b {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 10px;
+    border: 1px solid rgb(201, 192, 197);
+    /* color: white; */
+    cursor: pointer;
+    text-decoration: none;
+    color : black;
+    
+  }
+
+  .paginationBttns a:hover {
+    color : grey;
+    text-decoration: none;
+    background-color: rgb(201, 192, 197);
+  }
+
+  .paginationBttns b:hover {
+    color : grey;
+    text-decoration: none;
+    background-color: rgb(201, 192, 197);
+  }
+  
+  .paginationActive a {
+    color: black;
+    background-color: rgb(201, 192, 197);
+    text-decoration: none;
+  }
+  
+  .paginationDisabled a {
+    color: black;
+    background-color: rgb(201, 192, 197);
+  }
