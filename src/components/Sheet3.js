@@ -12,6 +12,12 @@ import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import ReactPaginate from "react-paginate";
 import '../Pagenation.css'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 // import TablePagination from "@material-ui/core/TablePagination";
 // import ReactTable from 'react-table'
 
@@ -31,10 +37,10 @@ function SheetData() {
   let i = 0;
   let line = 'No Error';
   const getInitialState = () => {
-    const value = "20";
+    const value = "10";
     return value;
   };
-
+  const [age, setAge] = React.useState('');
 
   //const refresh = useRef(null)
   const inputRef = useRef(null);
@@ -51,16 +57,21 @@ function SheetData() {
   const [order, setOrder] = useState('ASC');
   const [currentPage, setCurrentPage] = useState(1);
   const [Perpage, setPerpage] = useState()
-  const [page, setPage] = useState();
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(
+    
+  );
+  const [rowsPerPage, setRowsPerPage] = useState(0);
   // const [user, setUser] = useState(excelData.slice(0, 50))
   const [pageNumber, setPageNumber] = useState(0);
   // const [showres, setShowres] = useState(10)
   const [pageSize, setPageSize] = useState(10);
+  // const [page, setPage] = React.useState(0);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 
+const [testPage, setTestPage]=useState(10);
 
-  const usersPerPage = 10;
+  const usersPerPage = testPage;
   const pagesVisited = pageNumber * usersPerPage;
 
   //Rows per page
@@ -75,17 +86,17 @@ function SheetData() {
   // const handlePageSizeChange = (params) => {
   //   setPageSize(params.pageSize);
   // };
- 
-const PerPage = page
+
+  const PerPage = page
 
 
   const pageCount = excelData ? Math.ceil(excelData.length / usersPerPage) : 0;
 
-  const pagehandler = excelData ? Math.ceil(1 - {PerPage} + excelData.length - 1) : 0;
+  const pagehandler = excelData ? Math.ceil(1 - { PerPage } + excelData.length - 1) : 0;
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
-    
+
   };
 
 
@@ -155,13 +166,14 @@ const PerPage = page
 
 
       }
-      console.log(data)
+      //console.log(data)
       // console.log(data.slice(0,50))
       setExcelData(data)
       //setPerpage(data.slice(0,50))
       setSearch(data);
       // pagenationFunc()
       setExcelData(data.slice(0, 500));
+      // setPageSize(data)
       //setDisable(true);
 
 
@@ -227,6 +239,17 @@ const PerPage = page
     setExcelData(rows);
   };
 
+  const handleCheck=(a,b) => {
+    console.log("Event value", a)
+    
+    console.log("Event value", b)
+    // setTestPage(val);
+  }
+  const handleChange = (event) => {
+    setAge(event.target.value);
+    console.log("-------->", event.target.value)
+    setTestPage(event.target.value);
+  };
 
   return (
 
@@ -271,13 +294,49 @@ const PerPage = page
         {excelData !== null && (
 
           <div>
-            {/* <DataGrid
-        pageSize={pageSize}
-        onPageSizeChange={handlePageSizeChange}
-        rowsPerPageOptions={[5, 10, 20]}
-        pagination
-        {...data}
-      /> */}
+            {/* <select
+              value={pageSize}
+              onChange={e => {
+                setPageSize(Number(e.target.value))
+              }}
+            > Show Per Page
+              {[10, 20, 30, 40, 50].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select> */}
+
+            <FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">Age</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={age}
+    label="Age"
+    onChange={handleChange}
+  >
+    <MenuItem value={10}>10</MenuItem>
+    <MenuItem value={20}>20</MenuItem>
+    <MenuItem value={30}>30</MenuItem>
+  </Select>
+</FormControl>
+
+            {/* <CustomTablePagination
+              // rowsPerPageOptions={[20, 30, 40, 50, { label: 'All', value: -1 }]}
+               rowsPerPageOptions={[10, 20, 50, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={excelData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              // onRowsPerPageChange={handleChangeRowsPerPage}
+              onRowsPerPageChange={()=>{
+                handleCheck(
+                   page, rowsPerPage);
+              }}
+            // onRowsPerPageChange={handleChangeRowsPerPage}
+            /> */}
+
 
             <table
               className="table"
@@ -305,14 +364,13 @@ const PerPage = page
               </thead>
               <tbody>
                 {/* <Pagination */}
-                {/* {
+                {
                   ((rowsPerPage > 0
                     ? excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     : excelData
-                  )) */}
-                {excelData.slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
+                  ))
+                .slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
                   <tr key={index} style={{ border: 'rgb(243, 212, 212)', backgroundColor: 'rgb(243, 212, 212)', width: '500px' }}>
-
                     <td>{index + 1}</td>
                     <td>{items.Name}</td>
                     <td>{items.Email}</td>
@@ -331,34 +389,21 @@ const PerPage = page
 
               </tbody>
 
-              {/* 
-              <CustomTablePagination
-                //  rowsPerPageOptions={[10, 50, 150, 250, { label: 'All', value: -1 }]}
-                // colSpan={3}
-                 count={excelData.length}
-                 rowsPerPage={rowsPerPage}
-                page={page}
-               
-                 onPageChange={handleChangePage}
-                // onRowsPerPageChange={handleChangeRowsPerPage}
-              />
- */}
-
             </table>
-            <div style = {{display:'flex'}}>
-            <h4 style={{marginLeft : '5%'}}> 1 - {pagehandler} of {excelData.length}</h4>
-            <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={pageCount}
-              onPageChange={changePage}
-              containerClassName={"paginationBttns"}
-              previousLinkClassName={"previousBttn"}
-              nextLinkClassName={"nextBttn"}
-              disabledClassName={"paginationDisabled"}
-              activeClassName={"paginationActive"}
-              
-            />
+            <div style={{ display: 'flex' }}>
+              <h4 style={{ marginLeft: '5%' }}> 1 - {pagehandler} of {excelData.length}</h4>
+              <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                pageCount={pageCount}
+                onPageChange={changePage}
+                containerClassName={"paginationBttns"}
+                previousLinkClassName={"previousBttn"}
+                nextLinkClassName={"nextBttn"}
+                disabledClassName={"paginationDisabled"}
+                activeClassName={"paginationActive"}
+
+              />
             </div>
 
 
