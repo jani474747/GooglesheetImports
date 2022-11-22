@@ -29,11 +29,10 @@ function SheetData() {
 
   const [age, setAge] = React.useState('');
 
-  //const refresh = useRef(null)
-  const inputRef = useRef(null);
+
+  const {inputRef} = useRef(null);
 
 
-  // const [disable, setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
   const [filtervalue, setFiltervalue] = useState('')
@@ -247,6 +246,7 @@ function SheetData() {
           style={{ top: "0", left: "0", padding: '15px 35px', fontSize: '15px' }}
           type='text'
           value={filtervalue}
+          label = 'Search'
           onInput={(e) => handleFilter(e)}
         />
          
@@ -266,10 +266,8 @@ function SheetData() {
                   <th scope="row"><button
                     onClick={() => sorting("Name")} style={{ border: 'transparent', color: 'white' }}>Name</button></th>
                   <th scope="row"><button
-                    // onClick={()=> sorting('Email')}
                     style={{ border: 'transparent', color: 'white' }}>Email</button></th>
                   <th scope="row"><button
-                    // onClick={()=> sorting('Mobile')}
                     style={{ border: 'transparent', color: 'white' }}>Mobile</button></th>
                   <th scope="row"><button
                     onClick={() => sorting('Address')} style={{ border: 'transparent', color: 'white' }}>Address</button></th>
