@@ -36,10 +36,10 @@ function SheetData() {
 
   let i = 0;
   let line = 'No Error';
-  const getInitialState = () => {
-    const value = "10";
-    return value;
-  };
+  // const getInitialState = () => {
+  //   const value = "10";
+  //   return value;
+  // };
   const [age, setAge] = React.useState('');
 
   //const refresh = useRef(null)
@@ -49,44 +49,23 @@ function SheetData() {
   // const [disable, setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
-  const [value, setValue] = useState(getInitialState);
+  // const [value, setValue] = useState(getInitialState);
   const [filtervalue, setFiltervalue] = useState('')
   const [search, setSearch] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [player, setPlayer] = useState([])
   const [order, setOrder] = useState('ASC');
   const [currentPage, setCurrentPage] = useState(1);
   const [Perpage, setPerpage] = useState()
-  const [page, setPage] = useState(
-    
-  );
+  const [page, setPage] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(0);
-  // const [user, setUser] = useState(excelData.slice(0, 50))
   const [pageNumber, setPageNumber] = useState(0);
-  // const [showres, setShowres] = useState(10)
   const [pageSize, setPageSize] = useState(10);
-  // const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
 
 
 const [testPage, setTestPage]=useState(10);
 
   const usersPerPage = testPage;
   const pagesVisited = pageNumber * usersPerPage;
-
-  //Rows per page
-
-
-  // const { data } = useDemoData({
-  //   dataSet: 'Commodity',
-  //   rowLength: 100,
-  //   maxColumns: 6,
-  // });
-
-  // const handlePageSizeChange = (params) => {
-  //   setPageSize(params.pageSize);
-  // };
-
   const PerPage = page
 
 

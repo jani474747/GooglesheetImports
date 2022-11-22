@@ -1,33 +1,23 @@
-//import { Data } from '../components/Data'
 import * as XLSX from 'xlsx'
 import { Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useMemo, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { CustomTablePagination } from './customtable'
 import { useRef } from 'react'
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.css";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import ReactPaginate from "react-paginate";
 import '../Pagenation.css'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-// import TablePagination from "@material-ui/core/TablePagination";
-// import ReactTable from 'react-table'
-
 
 
 
 const PageSize = 10;
 let search;
-// const fromDb = undefined;
-// const str = fromDb || '';
 const excelData = undefined;
 
 
@@ -36,10 +26,7 @@ function SheetData() {
 
   let i = 0;
   let line = 'No Error';
-  const getInitialState = () => {
-    const value = "10";
-    return value;
-  };
+
   const [age, setAge] = React.useState('');
 
   //const refresh = useRef(null)
@@ -49,49 +36,19 @@ function SheetData() {
   // const [disable, setDisable] = useState()
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
-  const [value, setValue] = useState(getInitialState);
   const [filtervalue, setFiltervalue] = useState('')
   const [search, setSearch] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [player, setPlayer] = useState([])
   const [order, setOrder] = useState('ASC');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [Perpage, setPerpage] = useState()
-  const [page, setPage] = useState(
-    
-  );
+  const [page, setPage] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(0);
-  // const [user, setUser] = useState(excelData.slice(0, 50))
   const [pageNumber, setPageNumber] = useState(0);
-  // const [showres, setShowres] = useState(10)
-  const [pageSize, setPageSize] = useState(10);
-  // const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-
-const [testPage, setTestPage]=useState(10);
-
+  const [testPage, setTestPage] = useState(10);
   const usersPerPage = testPage;
   const pagesVisited = pageNumber * usersPerPage;
 
-  //Rows per page
-
-
-  // const { data } = useDemoData({
-  //   dataSet: 'Commodity',
-  //   rowLength: 100,
-  //   maxColumns: 6,
-  // });
-
-  // const handlePageSizeChange = (params) => {
-  //   setPageSize(params.pageSize);
-  // };
 
   const PerPage = page
-
-
   const pageCount = excelData ? Math.ceil(excelData.length / usersPerPage) : 0;
-
   const pagehandler = excelData ? Math.ceil(1 - { PerPage } + excelData.length - 1) : 0;
 
   const changePage = ({ selected }) => {
@@ -121,11 +78,6 @@ const [testPage, setTestPage]=useState(10);
     // setDisable(false);
   };
 
-
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(parseInt(event.target.value, 10));
-  //   setPage(0);
-  // };
 
 
   const handleSubmit = (e) => {
@@ -166,15 +118,9 @@ const [testPage, setTestPage]=useState(10);
 
 
       }
-      //console.log(data)
-      // console.log(data.slice(0,50))
       setExcelData(data)
-      //setPerpage(data.slice(0,50))
       setSearch(data);
-      // pagenationFunc()
-      setExcelData(data.slice(0, 500));
-      // setPageSize(data)
-      //setDisable(true);
+      // setExcelData(data.slice(0, 500));
 
 
     }
@@ -192,7 +138,6 @@ const [testPage, setTestPage]=useState(10);
   const handleFilter = (e) => {
     if (e.target.value == '') {
       setExcelData(search)
-      //console.log(search)
     } else {
       const filterResult = search.filter(items =>
         items.Address.toLowerCase().includes(e.target.value.toLowerCase()) ||
@@ -239,15 +184,15 @@ const [testPage, setTestPage]=useState(10);
     setExcelData(rows);
   };
 
-  const handleCheck=(a,b) => {
+  const handleCheck = (a, b) => {
     console.log("Event value", a)
-    
+
     console.log("Event value", b)
     // setTestPage(val);
   }
   const handleChange = (event) => {
     setAge(event.target.value);
-    console.log("-------->", event.target.value)
+    //console.log("-------->", event.target.value)
     setTestPage(event.target.value);
   };
 
@@ -280,64 +225,37 @@ const [testPage, setTestPage]=useState(10);
 
 
       <hr></hr>
-      <div style={{ justifyContent: 'space-between' }}>
+      <div style={{display : 'flex',justifyContent: 'space-between' }}>
+
+        <FormControl style = {{width : '10%'}}>
+          <InputLabel id="demo-simple-select-label">Rows</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={age}
+            label="Rows"
+            onChange={handleChange}
+          >
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={150}>150</MenuItem>
+            <MenuItem value={250}>250</MenuItem>
+            <MenuItem value={500}>All</MenuItem>
+          </Select>
+        </FormControl>
+        
         <input
           style={{ top: "0", left: "0", padding: '15px 35px', fontSize: '15px' }}
           type='text'
           value={filtervalue}
           onInput={(e) => handleFilter(e)}
         />
-
+         
       </div>
       <div className="openbtn text-center">
         {excelData === null && <>No file selected</>}
         {excelData !== null && (
 
           <div>
-            {/* <select
-              value={pageSize}
-              onChange={e => {
-                setPageSize(Number(e.target.value))
-              }}
-            > Show Per Page
-              {[10, 20, 30, 40, 50].map(pageSize => (
-                <option key={pageSize} value={pageSize}>
-                  {pageSize}
-                </option>
-              ))}
-            </select> */}
-
-            <FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Age</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    value={age}
-    label="Age"
-    onChange={handleChange}
-  >
-    <MenuItem value={10}>10</MenuItem>
-    <MenuItem value={20}>20</MenuItem>
-    <MenuItem value={30}>30</MenuItem>
-  </Select>
-</FormControl>
-
-            {/* <CustomTablePagination
-              // rowsPerPageOptions={[20, 30, 40, 50, { label: 'All', value: -1 }]}
-               rowsPerPageOptions={[10, 20, 50, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={excelData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              // onRowsPerPageChange={handleChangeRowsPerPage}
-              onRowsPerPageChange={()=>{
-                handleCheck(
-                   page, rowsPerPage);
-              }}
-            // onRowsPerPageChange={handleChangeRowsPerPage}
-            /> */}
-
-
             <table
               className="table"
               style={{ padding: '2% 10% 10% 15%' }}>
@@ -369,29 +287,29 @@ const [testPage, setTestPage]=useState(10);
                     ? excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     : excelData
                   ))
-                .slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
-                  <tr key={index} style={{ border: 'rgb(243, 212, 212)', backgroundColor: 'rgb(243, 212, 212)', width: '500px' }}>
-                    <td>{index + 1}</td>
-                    <td>{items.Name}</td>
-                    <td>{items.Email}</td>
-                    <td>{items.Mobile}</td>
-                    <td>{items.Address}</td>
-                    <td>{items.Country}</td>
-                    <td>{items.Status}</td>
-                    <td>
-                      <ul>
-                        <li>{items.Error}</li>
-                      </ul>
-                    </td>
-                  </tr>
+                    .slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
+                      <tr key={index} style={{ border: 'rgb(243, 212, 212)', backgroundColor: 'rgb(243, 212, 212)', width: '500px' }}>
+                        <td>{index + 1}</td>
+                        <td>{items.Name}</td>
+                        <td>{items.Email}</td>
+                        <td>{items.Mobile}</td>
+                        <td>{items.Address}</td>
+                        <td>{items.Country}</td>
+                        <td>{items.Status}</td>
+                        <td>
+                          <ul>
+                            <li>{items.Error}</li>
+                          </ul>
+                        </td>
+                      </tr>
 
-                ))}
+                    ))}
 
               </tbody>
 
             </table>
             <div style={{ display: 'flex' }}>
-              <h4 style={{ marginLeft: '5%' }}> 1 - {pagehandler} of {excelData.length}</h4>
+              <h4 style={{ marginLeft: '5%' }}> 1 - {testPage} of {excelData.length}</h4>
               <ReactPaginate
                 previousLabel={"Previous"}
                 nextLabel={"Next"}
@@ -405,8 +323,6 @@ const [testPage, setTestPage]=useState(10);
 
               />
             </div>
-
-
           </div>
         )}
       </div>
