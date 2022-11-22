@@ -246,7 +246,7 @@ function SheetData() {
           style={{ top: "0", left: "0", padding: '15px 35px', fontSize: '15px' }}
           type='text'
           value={filtervalue}
-          label = 'Search'
+          placeholder = 'Search'
           onInput={(e) => handleFilter(e)}
         />
          
