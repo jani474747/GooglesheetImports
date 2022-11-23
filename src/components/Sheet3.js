@@ -21,6 +21,7 @@ let search;
 const excelData = undefined;
 
 
+
 function SheetData() {
 
 
@@ -31,8 +32,6 @@ function SheetData() {
 
 
   const {inputRef} = useRef(null);
-
-
   const [excelFile, setExcelFile] = useState(null);
   const [excelData, setExcelData] = useState(null);
   const [filtervalue, setFiltervalue] = useState('')
@@ -44,13 +43,17 @@ function SheetData() {
   const [testPage, setTestPage] = useState(10);
   const usersPerPage = testPage;
   const pagesVisited = pageNumber * usersPerPage;
-  const [clear,setClear] = useState(null);
+  //  console.log(pagesVisited)
+   const count = 10
 
 
+
+  // Page Count
   const PerPage = page
   const pageCount = excelData ? Math.ceil(excelData.length / usersPerPage) : 0;
-  const pagehandler = excelData ? Math.ceil(1 - { excelData } + excelData.length - 1) : 0;
-
+//console.log(usersPerPage)
+  const pagehandler =  excelData ? Math.ceil(pageCount - { pagesVisited } + excelData.length - 1) : 0;
+ //console.log(usersPerPage)
   const changePage = ({ selected }) => {
     setPageNumber(selected);
 
@@ -71,13 +74,6 @@ function SheetData() {
     }
 
   }
-
-
-
-  // const handleClick = () => {
-  //   setDisable(false);
-  // };
-
 
 
   const handleSubmit = (e) => {
@@ -284,11 +280,8 @@ function SheetData() {
               <tbody>
                 {/* <Pagination */}
                 {
-                  // ((rowsPerPage > 0
-                  //   ? excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  //   : excelData
-                  // ))
-                    excelData.slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
+                  
+                   excelData.slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
                       <tr key={index} style={{ border: 'rgb(243, 212, 212)', backgroundColor: 'rgb(243, 212, 212)', width: '500px' }}>
                         <td>{index + 1}</td>
                         <td>{items.Name}</td>
@@ -310,7 +303,9 @@ function SheetData() {
 
             </table>
             <div style={{ display: 'flex' }}>
-              <h4 style={{ marginLeft: '5%' }}> 1 - {testPage} of {excelData.length}</h4>
+
+              <h4 style={{ marginLeft: '5%' }}> {!pagesVisited ? 1 : (pagesVisited+pagesVisited%pagesVisited+1)} - {(pagesVisited+usersPerPage)} of {excelData.length}</h4>
+              
               <ReactPaginate
                 previousLabel={"Previous"}
                 nextLabel={"Next"}
