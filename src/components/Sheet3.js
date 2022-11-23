@@ -44,11 +44,12 @@ function SheetData() {
   const [testPage, setTestPage] = useState(10);
   const usersPerPage = testPage;
   const pagesVisited = pageNumber * usersPerPage;
+  const [clear,setClear] = useState(null);
 
 
   const PerPage = page
   const pageCount = excelData ? Math.ceil(excelData.length / usersPerPage) : 0;
-  const pagehandler = excelData ? Math.ceil(1 - { PerPage } + excelData.length - 1) : 0;
+  const pagehandler = excelData ? Math.ceil(1 - { excelData } + excelData.length - 1) : 0;
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
@@ -73,9 +74,9 @@ function SheetData() {
 
 
 
-  const handleClick = () => {
-    // setDisable(false);
-  };
+  // const handleClick = () => {
+  //   setDisable(false);
+  // };
 
 
 
@@ -177,10 +178,9 @@ function SheetData() {
 
   // const inputRef = useRef(null);
   const onButtonClick = () => {
-    inputRef.current.value = "";
-    const rows = [...excelData];
-    rows.splice(excelData, 1);
-    setExcelData(rows);
+    setExcelData(null)
+    // setDisable(false)
+
   };
 
   const handleCheck = (a, b) => {
@@ -210,14 +210,15 @@ function SheetData() {
 
             <button
               // disabled={disable}
-              onClick={handleClick}
+              // onClick={handleClick}
               type='submit' className='btn btn-success'
             // style={disable ? styles.buttonDisabled : styles.button}
             >Submit</button>
 
             <button className='btn btn-danger' style={{ marginLeft: '2%' }}
               onClick={onButtonClick}
-              type='clear' >Clear</button>
+              type="reset" value="Reset"
+              >Clear</button>
           </div>
         </form>
       </div>
@@ -235,6 +236,8 @@ function SheetData() {
             label="Rows"
             onChange={handleChange}
           >
+            
+            <MenuItem value={10}>10</MenuItem>
             <MenuItem value={50}>50</MenuItem>
             <MenuItem value={150}>150</MenuItem>
             <MenuItem value={250}>250</MenuItem>
@@ -281,11 +284,11 @@ function SheetData() {
               <tbody>
                 {/* <Pagination */}
                 {
-                  ((rowsPerPage > 0
-                    ? excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : excelData
-                  ))
-                    .slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
+                  // ((rowsPerPage > 0
+                  //   ? excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  //   : excelData
+                  // ))
+                    excelData.slice(pagesVisited, pagesVisited + usersPerPage).map((items, index) => (
                       <tr key={index} style={{ border: 'rgb(243, 212, 212)', backgroundColor: 'rgb(243, 212, 212)', width: '500px' }}>
                         <td>{index + 1}</td>
                         <td>{items.Name}</td>
@@ -324,6 +327,7 @@ function SheetData() {
           </div>
         )}
       </div>
+   
       <ToastContainer />
 
     </div>
