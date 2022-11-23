@@ -4,8 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:![Screenshot (4)](https://user-images.githubusercontent.com/96036214/201064709-3ebdd6bc-66d6-47f9-ae32-a95c03ebcb4a.png)
+In the project directory, you can run:![Screenshot (4)]
 
+![Screenshot (12)](https://user-images.githubusercontent.com/96036214/203539747-cbb10593-f11b-4b84-974e-67202ff43fee.png)
 
 ### `npm start`
 
@@ -14,6 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+![Screenshot (13)](https://user-images.githubusercontent.com/96036214/203539765-bae7a1a3-bbe3-482f-9c16-3ca275498424.png)
 
 ### `npm test`
 
@@ -27,12 +29,15 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
+![Screenshot (17)](https://user-images.githubusercontent.com/96036214/203539867-99fc47cc-f34c-4c2b-ac7c-7ba982ad6e00.png)
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### `npm run eject`
+![Screenshot (14)](https://user-images.githubusercontent.com/96036214/203539779-79496741-df95-4eb0-8f86-858f1cc4f673.png)
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![Screenshot (15)](https://user-images.githubusercontent.com/96036214/203539837-879ac576-216e-4027-8b1e-e0c3acfafdba.png)
 
 If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
